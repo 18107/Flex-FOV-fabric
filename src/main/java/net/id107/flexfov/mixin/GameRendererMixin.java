@@ -1,6 +1,7 @@
 package net.id107.flexfov.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -14,13 +15,19 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
+	@Shadow boolean renderHand;
+	private boolean renderHandPass;
+	
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", ordinal = 0))
 	private void renderPre(float tickDelta, long startTime, boolean tick, CallbackInfo callbackInfo) {
+		renderHandPass = renderHand;
+		renderHand = false;
 		RenderEventPre.EVENT.invoker().renderPre(tickDelta, startTime, tick);
 	}
 	
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;isIntegratedServerRunning()Z", ordinal = 0))
 	private void renderPost(float tickDelta, long startTime, boolean tick, CallbackInfo callbackInfo) {
+		renderHand = renderHandPass;
 		RenderEventPost.EVENT.invoker().renderPost(tickDelta, startTime, tick);
 	}
 	
