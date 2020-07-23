@@ -6,10 +6,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.id107.flexfov.event.MatrixStackEvent;
 import net.id107.flexfov.event.RenderEventPost;
 import net.id107.flexfov.event.RenderEventPre;
+import net.id107.flexfov.projection.Projection;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -17,6 +19,11 @@ import net.minecraft.client.util.math.MatrixStack;
 public abstract class GameRendererMixin {
 	@Shadow boolean renderingPanorama;
 	private boolean renderingPanoramaTemp;
+	
+	@Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
+	private void panoramaFov(CallbackInfoReturnable<Double> callbackInfo) {
+		callbackInfo.setReturnValue((double)Projection.getProjection().getPassFOV(90));
+	}
 	
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", ordinal = 0))
 	private void renderPre(float tickDelta, long startTime, boolean tick, CallbackInfo callbackInfo) {

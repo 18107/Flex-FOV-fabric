@@ -28,7 +28,6 @@ public abstract class Projection {
 	protected int renderPass;
 	
 	private static boolean hudHidden;
-	private static boolean renderHand;
 	
 	public static Projection getProjection() {
 		return currentProjection;
@@ -195,7 +194,7 @@ public abstract class Projection {
 		GL20.glUniform1f(fovyUniform, fovx*displayHeight/(float)displayWidth);
 		
 		int backgroundUniform = GL20.glGetUniformLocation(shaderProgram, "backgroundColor");
-		float backgroundColor[] = getBackgroundColor();
+		float backgroundColor[] = getBackgroundColor(false);
 		if (backgroundColor != null) {
 			GL20.glUniform4f(backgroundUniform, backgroundColor[0], backgroundColor[1], backgroundColor[2], 1);
 		} else {
@@ -253,8 +252,12 @@ public abstract class Projection {
 		return antialiasing;
 	}
 	
-	public float[] getBackgroundColor() {
-		return null;
+	public float[] getBackgroundColor(boolean sky) {
+		if (sky) {
+			return new float[] {1, 0, 1};
+		} else {
+			return null;
+		}
 	}
 	
 	public float getPassFOV(float fovIn) {

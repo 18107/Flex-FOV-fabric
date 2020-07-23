@@ -2,11 +2,11 @@ package net.id107.flexfov.projection;
 
 import net.id107.flexfov.Reader;
 
-public class Cubic extends Projection {
+public class Hammer extends Projection {
 
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("flexfov:shaders/cubic.fs");
+		return Reader.read("flexfov:shaders/hammer.fs");
 	}
 	
 	@Override
