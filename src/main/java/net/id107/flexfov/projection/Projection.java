@@ -143,7 +143,7 @@ public abstract class Projection {
 		int shaderProgram = shader.getShaderProgram();
 		int displayWidth = MinecraftClient.getInstance().getWindow().getWidth();
 		int displayHeight = MinecraftClient.getInstance().getWindow().getHeight();
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		int lightmap = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 		GL20.glUseProgram(shaderProgram);
 		
@@ -238,7 +238,7 @@ public abstract class Projection {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPopMatrix();
 		
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, lightmap);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		
