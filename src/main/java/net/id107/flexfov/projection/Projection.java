@@ -54,11 +54,13 @@ public abstract class Projection {
 		
 		for (renderPass = 1; renderPass < 6; renderPass++) {
 			GL11.glViewport(0, 0, displayWidth, displayHeight);
+			mc.worldRenderer.scheduleTerrainUpdate();
 			mc.gameRenderer.renderWorld(tickDelta, startTime, new MatrixStack());
 			saveRenderPass();
 		}
 		renderPass = 0;
 		GL11.glViewport(0, 0, displayWidth, displayHeight);
+		mc.worldRenderer.scheduleTerrainUpdate();
 		
 		mc.options.hudHidden = hudHidden;
 	}

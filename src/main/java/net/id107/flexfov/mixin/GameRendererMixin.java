@@ -15,19 +15,19 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-	@Shadow boolean renderHand;
-	private boolean renderHandPass;
+	@Shadow boolean renderingPanorama;
+	private boolean renderingPanoramaTemp;
 	
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", ordinal = 0))
 	private void renderPre(float tickDelta, long startTime, boolean tick, CallbackInfo callbackInfo) {
-		renderHandPass = renderHand;
-		renderHand = false;
+		renderingPanoramaTemp = renderingPanorama;
+		renderingPanorama = true;
 		RenderEventPre.EVENT.invoker().renderPre(tickDelta, startTime, tick);
 	}
 	
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;isIntegratedServerRunning()Z", ordinal = 0))
 	private void renderPost(float tickDelta, long startTime, boolean tick, CallbackInfo callbackInfo) {
-		renderHand = renderHandPass;
+		renderingPanorama = renderingPanoramaTemp;
 		RenderEventPost.EVENT.invoker().renderPost(tickDelta, startTime, tick);
 	}
 	
