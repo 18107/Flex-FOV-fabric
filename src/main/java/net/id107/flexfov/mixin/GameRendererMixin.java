@@ -39,6 +39,7 @@ public abstract class GameRendererMixin {
 		renderingPanorama = renderingPanoramaTemp;
 		client.options.fov = fovTemp;
 		Projection.getProjection().saveRenderPass();
+		Projection.getProjection().loadUniforms(tickDelta);
 		Projection.getProjection().runShader(tickDelta);
 	}
 	

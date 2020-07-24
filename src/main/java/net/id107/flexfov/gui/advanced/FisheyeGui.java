@@ -18,7 +18,7 @@ public class FisheyeGui extends AdvancedGui {
 	protected void init() {
 		super.init();
 		
-		ButtonWidget button = new ButtonWidget(width / 2 - 190, height / 6 + 36, 76, 20,
+		ButtonWidget button = new ButtonWidget(width / 2 - 190, height / 6 + 60, 76, 20,
 				new LiteralText("Orthographic"), (buttonWidget) -> {
 					Fisheye.fisheyeType = 0;
 					client.openScreen(new FisheyeGui(parentScreen));
@@ -28,7 +28,7 @@ public class FisheyeGui extends AdvancedGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 - 114, height / 6 + 36, 76, 20,
+		button = new ButtonWidget(width / 2 - 114, height / 6 + 60, 76, 20,
 				new LiteralText("Thoby"), (buttonWidget) -> {
 					Fisheye.fisheyeType = 1;
 					client.openScreen(new FisheyeGui(parentScreen));
@@ -38,7 +38,7 @@ public class FisheyeGui extends AdvancedGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 - 38, height / 6 + 36, 76, 20,
+		button = new ButtonWidget(width / 2 - 38, height / 6 + 60, 76, 20,
 				new LiteralText("Equisolid"), (buttonWidget) -> {
 					Fisheye.fisheyeType = 2;
 					client.openScreen(new FisheyeGui(parentScreen));
@@ -48,7 +48,7 @@ public class FisheyeGui extends AdvancedGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 + 38, height / 6 + 36, 76, 20,
+		button = new ButtonWidget(width / 2 + 38, height / 6 + 60, 76, 20,
 				new LiteralText("Equidistant"), (buttonWidget) -> {
 					Fisheye.fisheyeType = 3;
 					client.openScreen(new FisheyeGui(parentScreen));
@@ -58,7 +58,7 @@ public class FisheyeGui extends AdvancedGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 + 114, height / 6 + 36, 76, 20,
+		button = new ButtonWidget(width / 2 + 114, height / 6 + 60, 76, 20,
 				new LiteralText("Stereographic"), (buttonWidget) -> {
 					Fisheye.fisheyeType = 4;
 					client.openScreen(new FisheyeGui(parentScreen));
@@ -72,10 +72,10 @@ public class FisheyeGui extends AdvancedGui {
 		if (Fisheye.fisheyeType == 1) fovSliderLimit = (int)Math.ceil(fovSliderLimit*0.713); //Thoby 256.68 degrees, slider goes up to 257
 		if (Fisheye.fisheyeType == 0) fovSliderLimit = 180; //Orthographic
 		final int finalSliderLimit = fovSliderLimit;
-		DoubleOption FOV = new DoubleOption("fisheyeFOV", 0, fovSliderLimit, 1,
-				(gameOptions) -> {return Math.min(finalSliderLimit, Projection.getProjection().getFOV());},
+		DoubleOption FOV = new DoubleOption("fisheyeFov", 0, fovSliderLimit, 1,
+				(gameOptions) -> {return Math.min(finalSliderLimit, Projection.getProjection().getFovX());},
 				(gameOptions, number) -> {Projection.fov = number;},
-				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Math.min(finalSliderLimit, Projection.getProjection().getFOV()));});
+				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Math.min(finalSliderLimit, Projection.getProjection().getFovX()));});
 		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 138, fovSliderLimit));
 		
 		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 84, 150, 20,

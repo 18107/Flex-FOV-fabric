@@ -20,6 +20,9 @@ public class Rectlinear extends Projection {
 	public void saveRenderPass() {}
 	
 	@Override
+	public void loadUniforms(float tickDelta) {}
+	
+	@Override
 	public void runShader(float tickDelta) {}
 	
 	@Override

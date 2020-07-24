@@ -7,7 +7,7 @@ import net.minecraft.text.LiteralText;
 
 public class AdvancedGui extends SettingsGui {
 
-	private static int currentGui = 4;
+	private static int currentGui = 5;
 	
 	public AdvancedGui(Screen parent) {
 		super(parent);
@@ -21,10 +21,12 @@ public class AdvancedGui extends SettingsGui {
 		case 1:
 			return new HammerGui(parent);
 		case 2:
-			return new FisheyeGui(parent);
-		case 3:
 			return new PaniniGui(parent);
+		case 3:
+			return new CylinderGui(parent);
 		case 4:
+			return new FisheyeGui(parent);
+		case 5:
 			return new EquirectangularGui(parent);
 		}
 	}
@@ -33,7 +35,7 @@ public class AdvancedGui extends SettingsGui {
 	protected void init() {
 		super.init();
 		
-		ButtonWidget button = new ButtonWidget(width / 2 - 212, height / 6 + 12, 84, 20,
+		ButtonWidget button = new ButtonWidget(width / 2 - 180, height / 6 + 12, 100, 20,
 				new LiteralText("Cubic"), (buttonWidget) -> {
 					currentGui = 0;
 					client.openScreen(new CubicGui(parentScreen));
@@ -43,7 +45,7 @@ public class AdvancedGui extends SettingsGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 - 127, height / 6 + 12, 84, 20,
+		button = new ButtonWidget(width / 2 - 50, height / 6 + 12, 100, 20,
 				new LiteralText("Hammer"), (buttonWidget) -> {
 					currentGui = 1;
 					client.openScreen(new HammerGui(parentScreen));
@@ -53,19 +55,9 @@ public class AdvancedGui extends SettingsGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 - 42, height / 6 + 12, 84, 20,
-				new LiteralText("Fisheye"), (buttonWidget) -> {
-					currentGui = 2;
-					client.openScreen(new FisheyeGui(parentScreen));
-				});
-		if (this instanceof FisheyeGui) {
-			button.active = false;
-		}
-		addButton(button);
-		
-		button = new ButtonWidget(width / 2 + 43, height / 6 + 12, 84, 20,
+		button = new ButtonWidget(width / 2 + 80, height / 6 + 12, 100, 20,
 				new LiteralText("Panini"), (buttonWidget) -> {
-					currentGui = 3;
+					currentGui = 2;
 					client.openScreen(new PaniniGui(parentScreen));
 				});
 		if (this instanceof PaniniGui) {
@@ -73,9 +65,29 @@ public class AdvancedGui extends SettingsGui {
 		}
 		addButton(button);
 		
-		button = new ButtonWidget(width / 2 + 128, height / 6 + 12, 84, 20,
-				new LiteralText("Equirectangular"), (buttonWidget) -> {
+		button = new ButtonWidget(width / 2 - 180, height / 6 + 36, 100, 20,
+				new LiteralText("Cylinder"), (buttonWidget) -> {
+					currentGui = 3;
+					client.openScreen(new CylinderGui(parentScreen));
+				});
+		if (this instanceof CylinderGui) {
+			button.active = false;
+		}
+		addButton(button);
+		
+		button = new ButtonWidget(width / 2 - 50, height / 6 + 36, 100, 20,
+				new LiteralText("Fisheye"), (buttonWidget) -> {
 					currentGui = 4;
+					client.openScreen(new FisheyeGui(parentScreen));
+				});
+		if (this instanceof FisheyeGui) {
+			button.active = false;
+		}
+		addButton(button);
+		
+		button = new ButtonWidget(width / 2 + 80, height / 6 + 36, 100, 20,
+				new LiteralText("Equirectangular"), (buttonWidget) -> {
+					currentGui = 5;
 					client.openScreen(new EquirectangularGui(parentScreen));
 				});
 		if (this instanceof EquirectangularGui) {

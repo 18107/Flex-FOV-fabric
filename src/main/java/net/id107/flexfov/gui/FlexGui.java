@@ -8,23 +8,19 @@ import net.minecraft.text.LiteralText;
 
 public class FlexGui extends SettingsGui {
 	
-	private static DoubleOption FOV;
-	
 	public FlexGui(Screen parent) {
 		super(parent);
 		Projection.setProjection(new Flex());
-		if (FOV == null) {
-			FOV = new DoubleOption("flexFOV", 0, 360, 1,
-							(gameOptions) -> {return Projection.getProjection().getFOV();},
-							(gameOptions, number) -> {Projection.fov = number;},
-							(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Projection.getProjection().getFOV());});
-		}
 	}
 	
 	@Override
 	protected void init() {
 		super.init();
 		
+		DoubleOption FOV = new DoubleOption("flexFov", 0, 360, 1,
+				(gameOptions) -> {return Projection.getProjection().getFovX();},
+				(gameOptions, number) -> {Projection.fov = number;},
+				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Projection.getProjection().getFovX());});
 		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 36, 360));
 	}
 }

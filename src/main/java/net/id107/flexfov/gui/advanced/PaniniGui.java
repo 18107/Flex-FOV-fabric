@@ -7,24 +7,20 @@ import net.minecraft.client.options.DoubleOption;
 import net.minecraft.text.LiteralText;
 
 public class PaniniGui extends AdvancedGui {
-
-	private static DoubleOption FOV;
 	
 	public PaniniGui(Screen parent) {
 		super(parent);
 		Projection.setProjection(new Panini());
-		if (FOV == null) {
-			FOV = new DoubleOption("paniniFOV", 0, 360, 1,
-							(gameOptions) -> {return Projection.getProjection().getFOV();},
-							(gameOptions, number) -> {Projection.fov = number;},
-							(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Projection.getProjection().getFOV());});
-		}
 	}
 	
 	@Override
 	protected void init() {
 		super.init();
 		
-		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 36, 360));
+		DoubleOption FOV = new DoubleOption("paniniFov", 0, 360, 1,
+				(gameOptions) -> {return Projection.getProjection().getFovX();},
+				(gameOptions, number) -> {Projection.fov = number;},
+				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Projection.getProjection().getFovX());});
+		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 60, 360));
 	}
 }

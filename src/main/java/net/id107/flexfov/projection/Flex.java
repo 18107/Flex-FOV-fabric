@@ -11,7 +11,7 @@ public class Flex extends Projection {
 	
 	@Override
 	public double getPassFOV(double fovIn) {
-		double fov = getFOV();
+		double fov = getFovX();
 		if (fov <= 90) {
 			if (fov == 0) {
 				fov = 0.0001f;

@@ -20,15 +20,14 @@ public class Fisheye extends Projection {
 	}
 	
 	@Override
-	public void runShader(float tickDelta) {
+	public void loadUniforms(float tickDelta) {
+		super.loadUniforms(tickDelta);
+		
 		int shaderProgram = getShaderProgram();
-		GL20.glUseProgram(shaderProgram);
 		
 		int fullFrameUniform = GL20.glGetUniformLocation(shaderProgram, "fullFrame");
 		GL20.glUniform1i(fullFrameUniform, fullFrame ? 1 : 0);
 		int fsheyeTypeUniform = GL20.glGetUniformLocation(shaderProgram, "fisheyeType");
 		GL20.glUniform1i(fsheyeTypeUniform, fisheyeType);
-		
-		super.runShader(tickDelta);
 	}
 }

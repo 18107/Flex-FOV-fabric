@@ -18,10 +18,11 @@ public class Equirectangular extends Projection {
 	}
 	
 	@Override
-	public void runShader(float tickDelta) {
+	public void loadUniforms(float tickDelta) {
+		super.loadUniforms(tickDelta);
+		
 		MinecraftClient mc = MinecraftClient.getInstance();
 		int shaderProgram = getShaderProgram();
-		GL20.glUseProgram(shaderProgram);
 		
 		int circleUniform = GL20.glGetUniformLocation(shaderProgram, "drawCircle");
 		GL20.glUniform1i(circleUniform, drawCircle ? 1 : 0);
@@ -41,7 +42,5 @@ public class Equirectangular extends Projection {
 		
 		int angleUniform = GL20.glGetUniformLocation(shaderProgram, "rotation");
 		GL20.glUniform2f(angleUniform, yaw, pitch);
-		
-		super.runShader(tickDelta);
 	}
 }

@@ -18,14 +18,14 @@ import net.minecraft.util.math.Quaternion;
 
 public abstract class Projection {
 
-	private static Projection currentProjection = new Rectlinear();
+	private static Projection currentProjection = new Flex();
 	private static ShaderManager shader = new ShaderManager();
 	
 	public static float backgroundRed;
 	public static float backgroundGreen;
 	public static float backgroundBlue;
 	
-	public static double fov = 180f;
+	public static double fov = 140f;
 	public static int antialiasing = 16;
 	public static boolean skyBackground = true;
 	
@@ -142,12 +142,10 @@ public abstract class Projection {
 		GlStateManager.bindFramebuffer(FramebufferInfo.FRAME_BUFFER, defaultFramebuffer.fbo);
 	}
 	
-	public void runShader(float tickDelta) {
+	public void loadUniforms(float tickDelta) {
 		int shaderProgram = shader.getShaderProgram();
 		int displayWidth = MinecraftClient.getInstance().getWindow().getWidth();
 		int displayHeight = MinecraftClient.getInstance().getWindow().getHeight();
-		GL13.glActiveTexture(GL13.GL_TEXTURE2);
-		int lightmap = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 		GL20.glUseProgram(shaderProgram);
 		
 		int aaUniform = GL20.glGetUniformLocation(shaderProgram, "antialiasing");
@@ -191,11 +189,10 @@ public abstract class Projection {
 		texUniform = GL20.glGetUniformLocation(shaderProgram, "texBottom");
 		GL20.glUniform1i(texUniform, 4);
 		
-		float fovx = (float) getFOV();
 		int fovxUniform = GL20.glGetUniformLocation(shaderProgram, "fovx");
-		GL20.glUniform1f(fovxUniform, fovx);
+		GL20.glUniform1f(fovxUniform, (float) getFovX());
 		int fovyUniform = GL20.glGetUniformLocation(shaderProgram, "fovy");
-		GL20.glUniform1f(fovyUniform, fovx*displayHeight/(float)displayWidth);
+		GL20.glUniform1f(fovyUniform, (float) getFovY());
 		
 		int backgroundUniform = GL20.glGetUniformLocation(shaderProgram, "backgroundColor");
 		float backgroundColor[] = getBackgroundColor(false);
@@ -204,6 +201,13 @@ public abstract class Projection {
 		} else {
 			GL20.glUniform4f(backgroundUniform, 0, 0, 0, 1);
 		}
+	}
+	
+	public void runShader(float tickDelta) {
+		int displayWidth = MinecraftClient.getInstance().getWindow().getWidth();
+		int displayHeight = MinecraftClient.getInstance().getWindow().getHeight();
+		GL13.glActiveTexture(GL13.GL_TEXTURE2);
+		int lightmap = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
 		
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -272,7 +276,13 @@ public abstract class Projection {
 		return BufferManager.getFOV();
 	}
 	
-	public double getFOV() {
+	public double getFovX() {
 		return fov;
+	}
+	
+	public double getFovY() {
+		double displayWidth = MinecraftClient.getInstance().getWindow().getWidth();
+		double displayHeight = MinecraftClient.getInstance().getWindow().getHeight();
+		return getFovX()*displayHeight/displayWidth;
 	}
 }
