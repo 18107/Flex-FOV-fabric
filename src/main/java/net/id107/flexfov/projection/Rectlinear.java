@@ -23,7 +23,12 @@ public class Rectlinear extends Projection {
 	public void runShader(float tickDelta) {}
 	
 	@Override
-	public float getPassFOV(float fovIn) {
+	public boolean getOverrideFOV() {
+		return false;
+	}
+	
+	@Override
+	public double getPassFOV(double fovIn) {
 		return fovIn;
 	}
 }

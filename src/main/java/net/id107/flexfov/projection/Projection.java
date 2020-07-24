@@ -21,7 +21,7 @@ public abstract class Projection {
 	private static Projection currentProjection = new Equirectangular();
 	private static ShaderManager shader = new ShaderManager();
 	
-	public static float fov = 180f;
+	public static double fov = 180f;
 	public static int antialiasing = 16;
 	public static boolean skyBackground = true;
 	
@@ -187,7 +187,7 @@ public abstract class Projection {
 		texUniform = GL20.glGetUniformLocation(shaderProgram, "texBottom");
 		GL20.glUniform1i(texUniform, 4);
 		
-		float fovx = getFOV();
+		float fovx = (float) getFOV();
 		int fovxUniform = GL20.glGetUniformLocation(shaderProgram, "fovx");
 		GL20.glUniform1f(fovxUniform, fovx);
 		int fovyUniform = GL20.glGetUniformLocation(shaderProgram, "fovy");
@@ -260,11 +260,15 @@ public abstract class Projection {
 		}
 	}
 	
-	public float getPassFOV(float fovIn) {
+	public boolean getOverrideFOV() {
+		return true;
+	}
+	
+	public double getPassFOV(double fovIn) {
 		return BufferManager.getFOV();
 	}
 	
-	public float getFOV() {
+	public double getFOV() {
 		return fov;
 	}
 }
