@@ -55,11 +55,20 @@ public abstract class Projection {
 		int displayHeight = mc.getWindow().getHeight();
 		hudHidden = mc.options.hudHidden;
 		
-		for (renderPass = 1; renderPass < 6; renderPass++) {
-			GL11.glViewport(0, 0, displayWidth, displayHeight);
-			mc.worldRenderer.scheduleTerrainUpdate();
-			mc.gameRenderer.renderWorld(tickDelta, startTime, new MatrixStack());
-			saveRenderPass();
+		if (Math.max(getFovX(), getFovY()) > 90) {
+			for (renderPass = 1; renderPass < 5; renderPass++) {
+				GL11.glViewport(0, 0, displayWidth, displayHeight);
+				mc.worldRenderer.scheduleTerrainUpdate();
+				mc.gameRenderer.renderWorld(tickDelta, startTime, new MatrixStack());
+				saveRenderPass();
+			}
+			if (Math.max(getFovX(), getFovY()) > 250) {
+				renderPass = 5;
+				GL11.glViewport(0, 0, displayWidth, displayHeight);
+				mc.worldRenderer.scheduleTerrainUpdate();
+				mc.gameRenderer.renderWorld(tickDelta, startTime, new MatrixStack());
+				saveRenderPass();
+			}
 		}
 		renderPass = 0;
 		GL11.glViewport(0, 0, displayWidth, displayHeight);
@@ -82,15 +91,15 @@ public abstract class Projection {
 			matrixStack.peek().getModel().multiply(matrix);
 			break;
 		case 3:
-			matrix = new Matrix4f(new Quaternion(0, -1, 0, 0)); //look back
-			matrixStack.peek().getModel().multiply(matrix);
-			break;
-		case 4:
 			matrix = new Matrix4f(new Quaternion(0.707106781f, 0, 0, 0.707106781f)); //look down
 			matrixStack.peek().getModel().multiply(matrix);
 			break;
-		case 5:
+		case 4:
 			matrix = new Matrix4f(new Quaternion(-0.707106781f, 0, 0, 0.707106781f)); //look up
+			matrixStack.peek().getModel().multiply(matrix);
+			break;
+		case 5:
+			matrix = new Matrix4f(new Quaternion(0, -1, 0, 0)); //look back
 			matrixStack.peek().getModel().multiply(matrix);
 			break;
 		}
@@ -179,15 +188,15 @@ public abstract class Projection {
 		int texUniform = GL20.glGetUniformLocation(shaderProgram, "texFront");
 		GL20.glUniform1i(texUniform, 0);
 		texUniform = GL20.glGetUniformLocation(shaderProgram, "texBack");
-		GL20.glUniform1i(texUniform, 3);
+		GL20.glUniform1i(texUniform, 5);
 		texUniform = GL20.glGetUniformLocation(shaderProgram, "texLeft");
 		GL20.glUniform1i(texUniform, 2);
 		texUniform = GL20.glGetUniformLocation(shaderProgram, "texRight");
 		GL20.glUniform1i(texUniform, 1);
 		texUniform = GL20.glGetUniformLocation(shaderProgram, "texTop");
-		GL20.glUniform1i(texUniform, 5);
-		texUniform = GL20.glGetUniformLocation(shaderProgram, "texBottom");
 		GL20.glUniform1i(texUniform, 4);
+		texUniform = GL20.glGetUniformLocation(shaderProgram, "texBottom");
+		GL20.glUniform1i(texUniform, 3);
 		
 		int fovxUniform = GL20.glGetUniformLocation(shaderProgram, "fovx");
 		GL20.glUniform1f(fovxUniform, (float) getFovX());
