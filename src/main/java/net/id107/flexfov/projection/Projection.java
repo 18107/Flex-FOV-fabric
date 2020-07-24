@@ -18,8 +18,12 @@ import net.minecraft.util.math.Quaternion;
 
 public abstract class Projection {
 
-	private static Projection currentProjection = new Equirectangular();
+	private static Projection currentProjection = new Rectlinear();
 	private static ShaderManager shader = new ShaderManager();
+	
+	public static float backgroundRed;
+	public static float backgroundGreen;
+	public static float backgroundBlue;
 	
 	public static double fov = 180f;
 	public static int antialiasing = 16;
@@ -254,7 +258,7 @@ public abstract class Projection {
 	
 	public float[] getBackgroundColor(boolean sky) {
 		if (sky) {
-			return new float[] {1, 0, 1};
+			return new float[] {backgroundRed, backgroundGreen, backgroundBlue};
 		} else {
 			return null;
 		}
