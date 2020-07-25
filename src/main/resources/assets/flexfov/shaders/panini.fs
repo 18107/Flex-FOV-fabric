@@ -1,7 +1,7 @@
-#version 130
+#version 110
 
 /* This comes interpolated from the vertex shader */
-in vec2 texcoord;
+varying vec2 texcoord;
 
 /* The 6 textures to be rendered */
 uniform sampler2D texFront;
@@ -21,8 +21,6 @@ uniform float fovy;
 uniform vec2 cursorPos;
 
 uniform bool drawCursor;
-
-out vec4 color;
 
 //copied from github.com/shaunlebron/flex-fov
 vec3 latlon_to_ray(float lat, float lon) {
@@ -146,12 +144,12 @@ void main(void) {
       corner[1] = mix(mix(colorN[3], colorN[2], 2.0/3.0), mix(colorN[7], colorN[6], 3.0/5.0), 5.0/8.0);
       corner[2] = mix(mix(colorN[12], colorN[13], 2.0/3.0), mix(colorN[8], colorN[9], 3.0/5.0), 5.0/8.0);
       corner[3] = mix(mix(colorN[15], colorN[14], 2.0/3.0), mix(colorN[11], colorN[10], 3.0/5.0), 5.0/8.0);
-      color = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
+      gl_FragColor = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
     }
     else if (antialiasing == 4) {
-        color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+        gl_FragColor = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
     }
     else { //if antialiasing == 1
-        color = colorN[0];
+        gl_FragColor = colorN[0];
     }
 }
