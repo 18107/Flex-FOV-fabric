@@ -43,4 +43,14 @@ public class Equirectangular extends Projection {
 		int angleUniform = GL20.glGetUniformLocation(shaderProgram, "rotation");
 		GL20.glUniform2f(angleUniform, yaw, pitch);
 	}
+	
+	@Override
+	public double getFovX() {
+		return 360;
+	}
+	
+	@Override
+	public double getFovY() {
+		return 180;
+	}
 }

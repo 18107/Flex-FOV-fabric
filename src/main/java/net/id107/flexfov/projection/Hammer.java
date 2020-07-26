@@ -13,4 +13,14 @@ public class Hammer extends Projection {
 	public float[] getBackgroundColor(boolean ignored) {
 		return super.getBackgroundColor(skyBackground);
 	}
+	
+	@Override
+	public double getFovX() {
+		return 360;
+	}
+	
+	@Override
+	public double getFovY() {
+		return 180;
+	}
 }
