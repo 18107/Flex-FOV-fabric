@@ -1,10 +1,10 @@
-#version 130
+#version 110
 
 #define M_PI 3.14159265
 #define M_E 2.718281828
 
 /* This comes interpolated from the vertex shader */
-in vec2 texcoord;
+varying vec2 texcoord;
 
 /* The 6 textures to be rendered */
 uniform sampler2D texFront;
@@ -21,7 +21,9 @@ uniform vec2 pixelOffset[16];
 uniform float fovx;
 uniform float fovy;
 
-out vec4 color;
+float sinh(float value) {
+  return (pow(M_E, value) - pow(M_E, -value))/2.0;
+}
 
 vec3 rotate(vec3 ray, vec2 angle) {
 
@@ -64,7 +66,7 @@ vec2 mercator_forward(float lat, float lon) {
   return vec2(x,y);
 }
 vec3 mercator_ray(vec2 lenscoord) {
-  float scale = mercator_forward(0, radians(fovx)/2).x;
+  float scale = mercator_forward(0.0, radians(fovx)/2.0).x;
   return mercator_inverse((lenscoord) * scale);
 }
 
@@ -72,23 +74,23 @@ vec3 panini_inverse(vec2 lenscoord, float dist) {
   float x = lenscoord.x;
   float y = lenscoord.y*fovy/fovx;
   float d = dist;
-  float k = x*x/((d+1)*(d+1));
-  float dscr = k*k*d*d - (k+1)*(k*d*d-1);
-  float clon = (-k*d+sqrt(dscr))/(k+1);
-  float S = (d+1)/(d+clon);
+  float k = x*x/((d+1.0)*(d+1.0));
+  float dscr = k*k*d*d - (k+1.0)*(k*d*d-1.0);
+  float clon = (-k*d+sqrt(dscr))/(k+1.0);
+  float S = (d+1.0)/(d+clon);
   float lon = atan(x,S*clon);
   float lat = atan(y,S);
   return latlon_to_ray(lat, lon);
 }
 vec2 panini_forward(float lat, float lon, float dist) {
   float d = dist;
-  float S = (d+1)/(d+cos(lon));
+  float S = (d+1.0)/(d+cos(lon));
   float x = S*sin(lon);
   float y = S*tan(lat);
   return vec2(x,y);
 }
 vec3 panini_ray(vec2 lenscoord, float dist) {
-  float scale = panini_forward(0, radians(fovx)/2, dist).x;
+  float scale = panini_forward(0.0, radians(fovx)/2.0, dist).x;
   return panini_inverse((lenscoord) * scale, dist);
 }
 //end copy
@@ -106,14 +108,14 @@ void main(void) {
 		//create ray
 		vec3 ray;
 
-		if (fovx < 90) {
+		if (fovx < 90.0) {
 			ray = passthrough(vec2(coord.x, coord.y*fovy/fovx));
-		} else if (fovx <= 180) {
-			ray = panini_ray(coord, (fovx-90)/90);
-		} else if (fovx < 320) {
-			float linear = (fovx - 180)/ 140;
-			float expon = linear*pow(M_E, 1-linear);
-			ray = mix(panini_ray(coord, 1), mercator_ray(coord), expon);
+		} else if (fovx <= 180.0) {
+			ray = panini_ray(coord, (fovx-90.0)/90.0);
+		} else if (fovx < 320.0) {
+			float linear = (fovx - 180.0)/ 140.0;
+			float expon = linear*pow(M_E, 1.0-linear);
+			ray = mix(panini_ray(coord, 1.0), mercator_ray(coord), expon);
 		} else {
 			ray = mercator_ray(coord);
 		}
@@ -121,54 +123,54 @@ void main(void) {
 		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {
 			if (abs(ray.x) > abs(ray.z)) {
-				if (ray.x > 0) {
+				if (ray.x > 0.0) {
 					//right
 					float x = ray.z / ray.x;
 					float y = ray.y / ray.x;
-					colorN[loop] = vec4(texture(texRight, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texRight, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				} else {
 					//left
 					float x = -ray.z / -ray.x;
 					float y = ray.y / -ray.x;
-					colorN[loop] = vec4(texture(texLeft, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texLeft, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				}
 			} else {
-				if (ray.z > 0) {
+				if (ray.z > 0.0) {
 					//back
 					float x = -ray.x / ray.z;
 					float y = ray.y / ray.z;
-					colorN[loop] = vec4(texture(texBack, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texBack, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				} else {
 					//front
 					float x = ray.x / -ray.z;
 					float y = ray.y / -ray.z;
-					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texFront, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				}
 			}
 		} else {
 			if (abs(ray.y) > abs(ray.z)) {
-				if (ray.y > 0) {
+				if (ray.y > 0.0) {
 					//top
 					float x = ray.x / ray.y;
 					float y = ray.z / ray.y;
-					colorN[loop] = vec4(texture(texTop, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texTop, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				} else {
 					//bottom
 					float x = ray.x / -ray.y;
 					float y = -ray.z / -ray.y;
-					colorN[loop] = vec4(texture(texBottom, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texBottom, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				}
 			} else {
-				if (ray.z > 0) {
+				if (ray.z > 0.0) {
 					//back
 					float x = -ray.x / ray.z;
 					float y = ray.y / ray.z;
-					colorN[loop] = vec4(texture(texBack, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texBack, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				} else {
 					//front
 					float x = ray.x / -ray.z;
 					float y = ray.y / -ray.z;
-					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);
+					colorN[loop] = vec4(texture2D(texFront, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 				}
 			}
 		}
@@ -180,12 +182,12 @@ void main(void) {
 	  corner[1] = mix(mix(colorN[3], colorN[2], 2.0/3.0), mix(colorN[7], colorN[6], 3.0/5.0), 5.0/8.0);
 	  corner[2] = mix(mix(colorN[12], colorN[13], 2.0/3.0), mix(colorN[8], colorN[9], 3.0/5.0), 5.0/8.0);
 	  corner[3] = mix(mix(colorN[15], colorN[14], 2.0/3.0), mix(colorN[11], colorN[10], 3.0/5.0), 5.0/8.0);
-	  color = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
+	  gl_FragColor = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
 	}
 	else if (antialiasing == 4) {
-		color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+		gl_FragColor = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
 	}
 	else { //if antialiasing == 1
-		color = colorN[0];
+		gl_FragColor = colorN[0];
 	}
 }
