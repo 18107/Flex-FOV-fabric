@@ -3,22 +3,21 @@
   "id": "flexfov",
   "version": "${version}",
 
-  "environment": "client",
-
   "name": "Flex FOV",
   "description": "Allows for changing the field of view from 0 to 360 degrees.",
   "authors": [
-    "18107"
+    "18107",
+    "Khonkhortisan",
+    "Shaunlebron"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/18107/Flex-FOV-fabric"
   },
 
   "license": "GPLv3",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/flexfov/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "net.id107.flexfov.FlexFOV"

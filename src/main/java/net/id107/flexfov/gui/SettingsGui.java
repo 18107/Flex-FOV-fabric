@@ -43,7 +43,7 @@ public abstract class SettingsGui extends Screen {
 		addButton(button);
 		
 		button = new ButtonWidget(width / 2 - 60, height / 6 - 12, 120, 20,
-				new LiteralText("TODO - add name"), (buttonWidget) -> {
+				new LiteralText("Flex"), (buttonWidget) -> {
 					currentGui = 1;
 					client.openScreen(new FlexGui(parentScreen));
 				});
