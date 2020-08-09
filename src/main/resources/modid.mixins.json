@@ -7,6 +7,8 @@
   ],
   "client": [
     "BackgroundRendererMixin",
+    "BillboardParticleMixin",
+    "EntityRendererMixin",
     "GameRendererMixin",
     "OptionsScreenMixin"
   ],

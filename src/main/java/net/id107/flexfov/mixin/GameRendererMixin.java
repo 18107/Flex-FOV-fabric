@@ -15,10 +15,14 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-	@Shadow MinecraftClient client;
+	@Shadow final MinecraftClient client;
 	@Shadow boolean renderingPanorama;
 	private boolean renderingPanoramaTemp;
 	private double fovTemp;
+	
+	public GameRendererMixin() {
+		client = null;
+	}
 	
 	@Inject(method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
 	private void panoramaFov(CallbackInfoReturnable<Double> callbackInfo) {
@@ -28,7 +32,7 @@ public abstract class GameRendererMixin {
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", ordinal = 0))
 	private void renderPre(float tickDelta, long startTime, boolean tick, CallbackInfo callbackInfo) {
 		renderingPanoramaTemp = renderingPanorama;
-		renderingPanorama = Projection.getProjection().getOverrideFOV();
+		renderingPanorama = Projection.getProjection().shouldOverrideFOV();
 		fovTemp = client.options.fov;
 		client.options.fov = Projection.getProjection().getPassFOV(fovTemp);
 		Projection.getProjection().renderWorld(tickDelta, startTime, tick);

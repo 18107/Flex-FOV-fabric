@@ -26,7 +26,12 @@ public class Rectlinear extends Projection {
 	public void runShader(float tickDelta) {}
 	
 	@Override
-	public boolean getOverrideFOV() {
+	public boolean shouldRotateParticles() {
+		return false;
+	}
+	
+	@Override
+	public boolean shouldOverrideFOV() {
 		return false;
 	}
 	

@@ -33,6 +33,8 @@ public abstract class Projection {
 	
 	private static boolean hudHidden;
 	
+	private static float tickDelta;
+	
 	public static Projection getProjection() {
 		return currentProjection;
 	}
@@ -50,6 +52,7 @@ public abstract class Projection {
 	public abstract String getFragmentShader();
 	
 	public void renderWorld(float tickDelta, long startTime, boolean tick) {
+		Projection.tickDelta = tickDelta;
 		MinecraftClient mc = MinecraftClient.getInstance();
 		int displayWidth = mc.getWindow().getWidth();
 		int displayHeight = mc.getWindow().getHeight();
@@ -265,6 +268,10 @@ public abstract class Projection {
 		return shader.getShaderProgram();
 	}
 	
+	public static float getTickDelta() {
+		return tickDelta;
+	}
+	
 	public int getAntialiasing() {
 		return antialiasing;
 	}
@@ -277,7 +284,11 @@ public abstract class Projection {
 		}
 	}
 	
-	public boolean getOverrideFOV() {
+	public boolean shouldRotateParticles() {
+		return true;
+	}
+	
+	public boolean shouldOverrideFOV() {
 		return true;
 	}
 	
