@@ -24,7 +24,7 @@ public abstract class SettingsGui extends Screen {
 		switch (currentGui) {
 		case 0:
 		default:
-			return new RectlinearGui(parent);
+			return new RectilinearGui(parent);
 		case 1:
 			return new FlexGui(parent);
 		case 2:
@@ -37,9 +37,9 @@ public abstract class SettingsGui extends Screen {
 		ButtonWidget button = new ButtonWidget(width / 2 - 190, height / 6 - 12, 120, 20,
 				new LiteralText("Default"), (buttonWidget) -> {
 					currentGui = 0;
-					client.openScreen(new RectlinearGui(parentScreen));
+					client.openScreen(new RectilinearGui(parentScreen));
 		});
-		if (this instanceof RectlinearGui) {
+		if (this instanceof RectilinearGui) {
 			button.active = false;
 		}
 		addButton(button);

@@ -25,6 +25,8 @@ uniform bool drawCircle;
 
 uniform vec2 rotation;
 
+uniform float zoom;
+
 vec3 rotate(vec3 ray, vec2 angle) {
 
   //rotate y
@@ -40,6 +42,14 @@ vec3 rotate(vec3 ray, vec2 angle) {
   ray.z = z;
 
   return ray;
+}
+
+vec3 calcZoom(vec3 ray) {
+	float z = ray.z - 1.0;
+	float temp = zoom*zoom*(ray.x*ray.x + ray.y*ray.y);
+	float denom = temp + z*z;
+	float numer = temp - z*z;
+	return vec3(-2.0*zoom*ray.x*z/denom, -2.0*zoom*ray.y*z/denom, numer/denom);
 }
 
 vec3 rotate2(vec3 ray, vec2 angle) {
@@ -74,6 +84,7 @@ void main(void) {
 		//rotate ray
 		ray = rotate(ray, vec2((coord.x+pixelOffset[loop].x)*M_PI, (coord.y+pixelOffset[loop].y)*M_PI/2.0)); //x (-pi to pi), y (-pi/2 to pi/2\n
 		ray = rotate2(ray, vec2(-rotation.x*M_PI/180.0, rotation.y*M_PI/180.0));
+		ray = calcZoom(ray);
 
 		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {

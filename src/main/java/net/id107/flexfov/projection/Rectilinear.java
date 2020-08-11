@@ -3,7 +3,7 @@ package net.id107.flexfov.projection;
 import net.id107.flexfov.Reader;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class Rectlinear extends Projection {
+public class Rectilinear extends Projection {
 
 	@Override
 	public String getFragmentShader() {

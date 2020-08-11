@@ -29,6 +29,16 @@ uniform vec2 cursorPos;
 
 uniform bool drawCursor;
 
+uniform float zoom;
+
+vec3 calcZoom(vec3 ray) {
+	float z = ray.z - 1.0;
+	float temp = zoom*zoom*(ray.x*ray.x + ray.y*ray.y);
+	float denom = temp + z*z;
+	float numer = temp - z*z;
+	return vec3(-2.0*zoom*ray.x*z/denom, -2.0*zoom*ray.y*z/denom, numer/denom);
+}
+
 vec4 fisheye(vec3 ray, float x, float y) {
 	vec4 color;
 	
@@ -115,6 +125,7 @@ vec4 fisheye(vec3 ray, float x, float y) {
 	//rotate ray
 	float s = sin(theta);
 	ray = vec3(x/r*s, y/r*s, -cos(theta));
+	ray = calcZoom(ray);
 
 	color = vec4(1, 0, 1, 0); //Purple should be obvious if the value is not set below
 

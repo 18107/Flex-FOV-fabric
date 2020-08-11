@@ -29,6 +29,7 @@ public abstract class Projection {
 	public static double fov = 140f;
 	public static int antialiasing = 16;
 	public static boolean skyBackground = true;
+	public static float zoom = 0;
 	
 	protected int renderPass;
 	
@@ -64,14 +65,14 @@ public abstract class Projection {
 		int displayHeight = mc.getWindow().getHeight();
 		hudHidden = mc.options.hudHidden;
 		
-		if (Math.max(getFovX(), getFovY()) > 90) {
+		if (Math.max(getFovX(), getFovY()) > 90 || zoom < 0) {
 			for (renderPass = 1; renderPass < 5; renderPass++) {
 				GL11.glViewport(0, 0, displayWidth, displayHeight);
 				mc.worldRenderer.scheduleTerrainUpdate();
 				mc.gameRenderer.renderWorld(tickDelta, startTime, new MatrixStack());
 				saveRenderPass();
 			}
-			if (Math.max(getFovX(), getFovY()) > 250) {
+			if (Math.max(getFovX(), getFovY()) > 250 || zoom < 0) {
 				renderPass = 5;
 				GL11.glViewport(0, 0, displayWidth, displayHeight);
 				mc.worldRenderer.scheduleTerrainUpdate();
@@ -219,6 +220,9 @@ public abstract class Projection {
 		} else {
 			GL20.glUniform4f(backgroundUniform, 0, 0, 0, 1);
 		}
+		
+		int zoomUniform = GL20.glGetUniformLocation(shaderProgram, "zoom");
+		GL20.glUniform1f(zoomUniform, (float)Math.pow(2, -zoom));
 	}
 	
 	public void runShader(float tickDelta) {

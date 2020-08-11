@@ -1,8 +1,11 @@
 package net.id107.flexfov.gui.advanced;
 
+import net.id107.flexfov.ConfigManager;
 import net.id107.flexfov.gui.SettingsGui;
+import net.id107.flexfov.projection.Projection;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.options.DoubleOption;
 import net.minecraft.text.LiteralText;
 
 public class AdvancedGui extends SettingsGui {
@@ -94,5 +97,13 @@ public class AdvancedGui extends SettingsGui {
 			button.active = false;
 		}
 		addButton(button);
+		
+		if (!(this instanceof CubicGui)) {
+			DoubleOption zoom = new DoubleOption("zoom", -2, 2, 0.05f,
+					(gameOptions) -> {return (double) Projection.zoom;},
+					(gameOptions, number) -> {Projection.zoom = (float)(double)number; ConfigManager.saveConfig();},
+					(gameOptions, doubleOption) -> {return new LiteralText(String.format("Zoom: %.2f", Projection.zoom));});
+			addButton(zoom.createButton(client.options, width / 2 + 5, height / 6 + 84, 150));
+		}
 	}
 }

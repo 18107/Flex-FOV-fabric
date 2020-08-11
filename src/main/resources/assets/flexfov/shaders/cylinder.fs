@@ -20,6 +20,8 @@ uniform vec2 pixelOffset[16];
 uniform float fovx;
 uniform float fovy;
 
+uniform float zoom;
+
 vec3 rotate(vec3 ray, vec2 angle) {
 
   //rotate y
@@ -34,6 +36,14 @@ vec3 rotate(vec3 ray, vec2 angle) {
   return ray;
 }
 
+vec3 calcZoom(vec3 ray) {
+	float z = ray.z - 1.0;
+	float temp = zoom*zoom*(ray.x*ray.x + ray.y*ray.y);
+	float denom = temp + z*z;
+	float numer = temp - z*z;
+	return vec3(-2.0*zoom*ray.x*z/denom, -2.0*zoom*ray.y*z/denom, numer/denom);
+}
+
 void main(void) {
   //Anti-aliasing
   vec4 colorN[16];
@@ -43,6 +53,7 @@ void main(void) {
     vec3 ray = vec3(0.0, 0.0, -1.0);
 
     ray = rotate(ray, vec2((coord.x+pixelOffset[loop].x)*M_PI*fovx/360.0, (coord.y+pixelOffset[loop].y)*tan(M_PI*fovy/360.0)));
+    ray = calcZoom(ray);
 
     if (abs(ray.x) > abs(ray.y)) {
 		if (abs(ray.x) > abs(ray.z)) {

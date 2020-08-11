@@ -22,26 +22,32 @@ public class ConfigManager {
 			byte[] bytes;
 			try {
 				bytes = Files.readAllBytes(filePath);
-				if (bytes.length < 4) return;
+				if (bytes.length < 15) return;
+				if (bytes[0] != 3) return;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return;
 			}
-			SettingsGui.currentGui = bytes[0];
-			AdvancedGui.currentGui = bytes[1];
-			Fisheye.fisheyeType = bytes[2];
-			Projection.skyBackground = bytes[3] != 0;
-			Projection.fov = ((bytes[4]&0xFF)<<8) | (bytes[5]&0xFF);
-			Cylinder.fovy = ((bytes[6]&0xFF)<<8) | (bytes[7]&0xFF);
-			Fisheye.fullFrame = bytes[8] != 0;
-			Equirectangular.drawCircle = bytes[9] != 0;
-			Equirectangular.stabilizePitch = bytes[10] != 0;
-			Equirectangular.stabilizeYaw = bytes[11] != 0;
+			SettingsGui.currentGui = bytes[1];
+			AdvancedGui.currentGui = bytes[2];
+			Fisheye.fisheyeType = bytes[3];
+			Projection.skyBackground = bytes[4] != 0;
+			Projection.fov = ((bytes[5]&0xFF)<<8) | (bytes[6]&0xFF);
+			Cylinder.fovy = ((bytes[7]&0xFF)<<8) | (bytes[8]&0xFF);
+			Fisheye.fullFrame = bytes[9] != 0;
+			Equirectangular.drawCircle = bytes[10] != 0;
+			Equirectangular.stabilizePitch = bytes[11] != 0;
+			Equirectangular.stabilizeYaw = bytes[12] != 0;
+			Projection.zoom = (((bytes[13]<<8)&0xFF) | (bytes[14]&0xFF))/100f;
+			if ((bytes[13] & 0b10000000) != 0) {
+				Projection.zoom = -Projection.zoom;
+			}
 		}
 	}
 	
 	public static void saveConfig() {
 		byte[] bytes = new byte[] {
+				(byte)3,
 				(byte)SettingsGui.currentGui,
 				(byte)AdvancedGui.currentGui,
 				(byte)Fisheye.fisheyeType,
@@ -53,7 +59,9 @@ public class ConfigManager {
 				Fisheye.fullFrame ? (byte)1 : (byte)0,
 				Equirectangular.drawCircle ? (byte)1 : (byte)0,
 				Equirectangular.stabilizePitch ? (byte)1 : (byte)0,
-				Equirectangular.stabilizeYaw ? (byte)1 : (byte)0
+				Equirectangular.stabilizeYaw ? (byte)1 : (byte)0,
+				(byte)((Math.round(Projection.zoom*100)>>8)&0xFF),
+				(byte)(Math.round(Projection.zoom*100)&0xFF)
 		};
 		try {
 			Files.write(filePath, bytes);

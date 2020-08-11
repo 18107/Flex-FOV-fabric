@@ -23,6 +23,8 @@ uniform vec2 cursorPos;
 
 uniform bool drawCursor;
 
+uniform float zoom;
+
 vec3 rotate(vec3 ray, vec2 angle) {
 
   //rotate y
@@ -38,6 +40,14 @@ vec3 rotate(vec3 ray, vec2 angle) {
   ray.z = z;
 
   return ray;
+}
+
+vec3 calcZoom(vec3 ray) {
+	float z = ray.z - 1.0;
+	float temp = zoom*zoom*(ray.x*ray.x + ray.y*ray.y);
+	float denom = temp + z*z;
+	float numer = temp - z*z;
+	return vec3(-2.0*zoom*ray.x*z/denom, -2.0*zoom*ray.y*z/denom, numer/denom);
 }
 
 void main(void) {
@@ -65,6 +75,7 @@ void main(void) {
 
 		//rotate ray
 		ray = rotate(ray, vec2(longitude, latitude));
+		ray = calcZoom(ray);
 
 		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {

@@ -22,6 +22,8 @@ uniform vec2 cursorPos;
 
 uniform bool drawCursor;
 
+uniform float zoom;
+
 //copied from github.com/shaunlebron/flex-fov
 vec3 latlon_to_ray(float lat, float lon) {
   return vec3(
@@ -58,6 +60,14 @@ vec3 panini_ray(vec2 lenscoord, float dist) {
 }
 //end copy
 
+vec3 calcZoom(vec3 ray) {
+	float z = ray.z - 1.0;
+	float temp = zoom*zoom*(ray.x*ray.x + ray.y*ray.y);
+	float denom = temp + z*z;
+	float numer = temp - z*z;
+	return vec3(-2.0*zoom*ray.x*z/denom, -2.0*zoom*ray.y*z/denom, numer/denom);
+}
+
 void main(void) {
     /* Ray-trace a cube */
 
@@ -70,6 +80,7 @@ void main(void) {
 
         //create ray
         vec3 ray = panini_ray(coord, 1.0);
+        ray = calcZoom(ray);
 
         //find which side to use
         if (abs(ray.x) > abs(ray.y)) {
