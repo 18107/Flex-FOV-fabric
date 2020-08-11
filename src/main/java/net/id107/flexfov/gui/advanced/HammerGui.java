@@ -1,5 +1,6 @@
 package net.id107.flexfov.gui.advanced;
 
+import net.id107.flexfov.ConfigManager;
 import net.id107.flexfov.projection.Hammer;
 import net.id107.flexfov.projection.Projection;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,6 +22,7 @@ public class HammerGui extends AdvancedGui {
 				new LiteralText("Background Color: " + (Projection.skyBackground ? "Sky" : "Black")), (buttonWidget) -> {
 					Projection.skyBackground = !Projection.skyBackground;
 					buttonWidget.setMessage(new LiteralText("Background Color: " + (Projection.skyBackground ? "Sky" : "Black")));
+					ConfigManager.saveConfig();
 				}));
 	}
 }

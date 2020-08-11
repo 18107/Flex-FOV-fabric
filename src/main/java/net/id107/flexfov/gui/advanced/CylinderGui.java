@@ -1,5 +1,6 @@
 package net.id107.flexfov.gui.advanced;
 
+import net.id107.flexfov.ConfigManager;
 import net.id107.flexfov.projection.Cylinder;
 import net.id107.flexfov.projection.Projection;
 import net.minecraft.client.gui.screen.Screen;
@@ -19,13 +20,13 @@ public class CylinderGui extends AdvancedGui {
 		
 		DoubleOption FOVX = new DoubleOption("cylinderFovX", 0, 360, 1,
 				(gameOptions) -> {return Projection.getProjection().getFovX();},
-				(gameOptions, number) -> {Projection.fov = number;},
+				(gameOptions, number) -> {Projection.fov = number; ConfigManager.saveConfig();},
 				(gameOptions, doubleOption) -> {return new LiteralText("Horizontal FOV: " + Math.round(Projection.getProjection().getFovX()));});
 		addButton(FOVX.createButton(client.options, width / 2 - 180, height / 6 + 60, 360));
 		
 		DoubleOption FOVY = new DoubleOption("cylinderFovY", 0, 180, 1,
 				(gameOptions) -> {return Projection.getProjection().getFovY();},
-				(gameOptions, number) -> {Cylinder.fovy = number;},
+				(gameOptions, number) -> {Cylinder.fovy = number; ConfigManager.saveConfig();},
 				(gameOptions, doubleOption) -> {return new LiteralText("Vertical FOV: " + Math.round(Projection.getProjection().getFovY()));});
 		addButton(FOVY.createButton(client.options, width / 2 - 180, height / 6 + 84, 180));
 	}

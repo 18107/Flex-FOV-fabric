@@ -7,7 +7,7 @@ import net.minecraft.text.LiteralText;
 
 public class AdvancedGui extends SettingsGui {
 
-	private static int currentGui = 5;
+	public static int currentGui = 5;
 	
 	public AdvancedGui(Screen parent) {
 		super(parent);

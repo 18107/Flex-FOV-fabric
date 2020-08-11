@@ -6,6 +6,7 @@ public class FlexFOV implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		ConfigManager.loadConfig();
 		System.out.println("FlexFOV loaded");
 	}
 }

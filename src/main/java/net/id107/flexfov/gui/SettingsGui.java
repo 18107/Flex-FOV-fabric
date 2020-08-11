@@ -1,5 +1,6 @@
 package net.id107.flexfov.gui;
 
+import net.id107.flexfov.ConfigManager;
 import net.id107.flexfov.gui.advanced.AdvancedGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
@@ -11,11 +12,12 @@ public abstract class SettingsGui extends Screen {
 
 	protected final Screen parentScreen;
 	
-	private static int currentGui = 1;
+	public static int currentGui = 1;
 	
 	public SettingsGui(Screen parent) {
 		super(new LiteralText("Flex FOV Settings"));
 		parentScreen = parent;
+		ConfigManager.saveConfig();
 	}
 	
 	public static SettingsGui getGui(Screen parent) {

@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.id107.flexfov.BufferManager;
 import net.id107.flexfov.Reader;
 import net.id107.flexfov.ShaderManager;
+import net.id107.flexfov.gui.SettingsGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -17,8 +18,8 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 
 public abstract class Projection {
-
-	private static Projection currentProjection = new Flex();
+	
+	private static Projection currentProjection;
 	private static ShaderManager shader = new ShaderManager();
 	
 	public static float backgroundRed;
@@ -36,13 +37,18 @@ public abstract class Projection {
 	private static float tickDelta;
 	
 	public static Projection getProjection() {
+		if (currentProjection == null) {
+			SettingsGui.getGui(null);
+		}
 		return currentProjection;
 	}
 	
 	public static void setProjection(Projection projection) {
 		currentProjection = projection;
-		shader.deleteShaderProgram();
-		shader.createShaderProgram(projection);
+		if (shader != null) {
+			shader.deleteShaderProgram();
+			shader.createShaderProgram(projection);
+		}
 	}
 	
 	public String getVertexShader() {

@@ -1,5 +1,6 @@
 package net.id107.flexfov.gui.advanced;
 
+import net.id107.flexfov.ConfigManager;
 import net.id107.flexfov.projection.Fisheye;
 import net.id107.flexfov.projection.Projection;
 import net.minecraft.client.gui.screen.Screen;
@@ -74,7 +75,7 @@ public class FisheyeGui extends AdvancedGui {
 		final int finalSliderLimit = fovSliderLimit;
 		DoubleOption FOV = new DoubleOption("fisheyeFov", 0, fovSliderLimit, 1,
 				(gameOptions) -> {return Math.min(finalSliderLimit, Projection.getProjection().getFovX());},
-				(gameOptions, number) -> {Projection.fov = number;},
+				(gameOptions, number) -> {Projection.fov = number; ConfigManager.saveConfig();},
 				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Math.min(finalSliderLimit, Projection.getProjection().getFovX()));});
 		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 138, fovSliderLimit));
 		
@@ -82,11 +83,13 @@ public class FisheyeGui extends AdvancedGui {
 				new LiteralText("Background Color: " + (Projection.skyBackground ? "Sky" : "Black")), (buttonWidget) -> {
 					Projection.skyBackground = !Projection.skyBackground;
 					buttonWidget.setMessage(new LiteralText("Background Color: " + (Projection.skyBackground ? "Sky" : "Black")));
+					ConfigManager.saveConfig();
 				}));
 		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 108, 150, 20,
 				new LiteralText("Full Frame: " + (Fisheye.fullFrame ? "ON" : "OFF")), (buttonWidget) -> {
 					Fisheye.fullFrame = !Fisheye.fullFrame;
 					buttonWidget.setMessage(new LiteralText("Full Frame: " + (Fisheye.fullFrame ? "ON" : "OFF")));
+					ConfigManager.saveConfig();
 				}));
 	}
 }
