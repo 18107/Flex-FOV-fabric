@@ -105,5 +105,11 @@ public class AdvancedGui extends SettingsGui {
 					(gameOptions, doubleOption) -> {return new LiteralText(String.format("Zoom: %.2f", Projection.zoom));});
 			addButton(zoom.createButton(client.options, width / 2 + 5, height / 6 + 84, 150));
 		}
+		
+		addButton(new ButtonWidget(width / 2 + 5, height / 6 + 108, 150, 20,
+				new LiteralText("Resize Gui: " + (Projection.resizeGui ? "ON" : "OFF")), (buttonWidget) -> {
+					Projection.resizeGui = !Projection.resizeGui;
+					buttonWidget.setMessage(new LiteralText("Resize Gui: " + (Projection.resizeGui ? "ON" : "OFF")));
+				}));
 	}
 }

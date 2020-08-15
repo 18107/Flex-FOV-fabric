@@ -25,7 +25,7 @@ public class Equirectangular extends Projection {
 		int shaderProgram = getShaderProgram();
 		
 		int circleUniform = GL20.glGetUniformLocation(shaderProgram, "drawCircle");
-		GL20.glUniform1i(circleUniform, drawCircle ? 1 : 0);
+		GL20.glUniform1i(circleUniform, (drawCircle && mc.currentScreen == null) ? 1 : 0);
 		
 		Entity entity = MinecraftClient.getInstance().getCameraEntity();
 		float pitch = 0;

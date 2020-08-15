@@ -24,13 +24,13 @@ public class EquirectangularGui extends AdvancedGui {
 					buttonWidget.setMessage(new LiteralText("Show Circle: " + (Equirectangular.drawCircle ? "ON" : "OFF")));
 					ConfigManager.saveConfig();
 				}));
-		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 108, 150, 20,
+		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 132, 150, 20,
 				new LiteralText("Stabilize Pitch: " + (Equirectangular.stabilizePitch ? "ON" : "OFF")), (buttonWidget) -> {
 					Equirectangular.stabilizePitch = !Equirectangular.stabilizePitch;
 					buttonWidget.setMessage(new LiteralText("Stabilize Pitch: " + (Equirectangular.stabilizePitch ? "ON" : "OFF")));
 					ConfigManager.saveConfig();
 				}));
-		addButton(new ButtonWidget(width / 2 + 5, height / 6 + 108, 150, 20,
+		addButton(new ButtonWidget(width / 2 + 5, height / 6 + 132, 150, 20,
 				new LiteralText("Stabilize Yaw: " + (Equirectangular.stabilizeYaw ? "ON" : "OFF")), (buttonWidget) -> {
 					Equirectangular.stabilizeYaw = !Equirectangular.stabilizeYaw;
 					buttonWidget.setMessage(new LiteralText("Stabilize Yaw: " + (Equirectangular.stabilizeYaw ? "ON" : "OFF")));

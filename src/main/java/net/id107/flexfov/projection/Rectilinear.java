@@ -26,6 +26,11 @@ public class Rectilinear extends Projection {
 	public void runShader(float tickDelta) {}
 	
 	@Override
+	public boolean getResizeGui() {
+		return false;
+	}
+	
+	@Override
 	public boolean shouldRotateParticles() {
 		return false;
 	}

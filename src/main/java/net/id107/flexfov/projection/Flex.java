@@ -20,4 +20,9 @@ public class Flex extends Projection {
 		}
 		return super.getPassFOV(fovIn);
 	}
+	
+	@Override
+	public boolean getResizeGui() {
+		return false;
+	}
 }

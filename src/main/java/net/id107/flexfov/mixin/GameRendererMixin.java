@@ -5,11 +5,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.id107.flexfov.projection.Projection;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -53,5 +56,19 @@ public abstract class GameRendererMixin {
 	private MatrixStack updateCamera(MatrixStack matrixStack) {
 		Projection.getProjection().rotateCamera(matrixStack);
 		return matrixStack;
+	}
+	
+	@Redirect(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;render(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
+	private void renderHud(InGameHud inGameHud, MatrixStack matrixStack, float tickDelta) {
+		if (!Projection.getProjection().getResizeGui()) {
+			inGameHud.render(matrixStack, tickDelta);
+		}
+	}
+	
+	@Redirect(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
+	private void renderCurrentScreen(Screen currentScreen, MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+		if (!Projection.getProjection().getResizeGui()) {
+			currentScreen.render(matrixStack, mouseX, mouseY, delta);
+		}
 	}
 }

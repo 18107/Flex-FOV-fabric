@@ -76,7 +76,7 @@ void main(void) {
 
 	for (int loop = 0; loop < antialiasing; loop++) {
 
-    	vec2 coord = texcoord;
+    vec2 coord = texcoord;
 
 		//create ray
 		vec3 ray = vec3(0.0, 0.0, -1.0);

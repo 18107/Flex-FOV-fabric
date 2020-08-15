@@ -10,7 +10,8 @@
     "BillboardParticleMixin",
     "EntityRendererMixin",
     "GameRendererMixin",
-    "OptionsScreenMixin"
+    "OptionsScreenMixin",
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

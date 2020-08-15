@@ -77,7 +77,7 @@ public class FisheyeGui extends AdvancedGui {
 				(gameOptions) -> {return Math.min(finalSliderLimit, Projection.getProjection().getFovX());},
 				(gameOptions, number) -> {Projection.fov = number; ConfigManager.saveConfig();},
 				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Math.min(finalSliderLimit, Projection.getProjection().getFovX()));});
-		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 138, fovSliderLimit));
+		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 132, fovSliderLimit));
 		
 		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 84, 150, 20,
 				new LiteralText("Background Color: " + (Projection.skyBackground ? "Sky" : "Black")), (buttonWidget) -> {

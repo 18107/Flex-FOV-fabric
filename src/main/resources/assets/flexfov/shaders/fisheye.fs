@@ -41,7 +41,7 @@ vec3 calcZoom(vec3 ray) {
 
 vec4 fisheye(vec3 ray, float x, float y) {
 	vec4 color;
-	
+
 	//scale from square view to window shape view //fcontain
 	float aspectRatio = fovx/fovy;
 	if (aspectRatio > 1.0) {
@@ -181,6 +181,17 @@ vec4 fisheye(vec3 ray, float x, float y) {
 				float y = ray.y / -ray.z;
 				color = vec4(texture2D(texFront, vec2((x+1.0)/2.0, (y+1.0)/2.0)).rgb, 1.0);
 			}
+		}
+	}
+
+	if (drawCursor) {
+		vec2 normalAngle = cursorPos*2.0 - 1.0;
+		float x = ray.x / -ray.z;
+		float y = ray.y / -ray.z;
+		if (x <= normalAngle.x + 0.01 && y <= normalAngle.y + 0.01 &&
+			x >= normalAngle.x - 0.01 && y >= normalAngle.y - 0.01 &&
+			ray.z < 0.0) {
+			color = vec4(1.0, 1.0, 1.0, 1.0);
 		}
 	}
 	return color;

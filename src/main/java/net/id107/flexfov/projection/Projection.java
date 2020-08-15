@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL20;
 
 import com.mojang.blaze3d.platform.FramebufferInfo;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.id107.flexfov.BufferManager;
 import net.id107.flexfov.Reader;
@@ -13,6 +14,7 @@ import net.id107.flexfov.ShaderManager;
 import net.id107.flexfov.gui.SettingsGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
@@ -34,6 +36,7 @@ public abstract class Projection {
 	protected int renderPass;
 	
 	private static boolean hudHidden;
+	public static boolean resizeGui;
 	
 	private static float tickDelta;
 	
@@ -116,6 +119,27 @@ public abstract class Projection {
 	}
 	
 	public void saveRenderPass() {
+		if (getResizeGui() && renderPass == 0) {
+			MinecraftClient mc = MinecraftClient.getInstance();
+			Window window = mc.getWindow();
+			RenderSystem.matrixMode(5889);
+			RenderSystem.loadIdentity();
+			RenderSystem.ortho(0.0D, (double)window.getFramebufferWidth() / window.getScaleFactor(), (double)window.getFramebufferHeight() / window.getScaleFactor(), 0.0D, 1000.0D, 3000.0D);
+			RenderSystem.matrixMode(5888);
+			RenderSystem.loadIdentity();
+			RenderSystem.translatef(0.0F, 0.0F, -2000.0F);
+			RenderSystem.defaultAlphaFunc();
+			RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
+			MatrixStack matrixStack = new MatrixStack();
+			mc.inGameHud.render(matrixStack, tickDelta);
+			RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
+			if (mc.currentScreen != null) {
+				int i = (int)(mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth());
+				int j = (int)(mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight());
+				mc.currentScreen.render(matrixStack, i, j, mc.getLastFrameDuration());
+			}
+		}
+		
 		Framebuffer defaultFramebuffer = MinecraftClient.getInstance().getFramebuffer();
 		Framebuffer targetFramebuffer = BufferManager.getFramebuffer();
 		if (targetFramebuffer == null) { //FIXME
@@ -162,6 +186,7 @@ public abstract class Projection {
 	}
 	
 	public void loadUniforms(float tickDelta) {
+		MinecraftClient mc = MinecraftClient.getInstance();
 		int shaderProgram = shader.getShaderProgram();
 		int displayWidth = MinecraftClient.getInstance().getWindow().getWidth();
 		int displayHeight = MinecraftClient.getInstance().getWindow().getHeight();
@@ -223,6 +248,16 @@ public abstract class Projection {
 		
 		int zoomUniform = GL20.glGetUniformLocation(shaderProgram, "zoom");
 		GL20.glUniform1f(zoomUniform, (float)Math.pow(2, -zoom));
+		
+		int drawCursorUniform = GL20.glGetUniformLocation(shaderProgram, "drawCursor");
+		GL20.glUniform1i(drawCursorUniform, (getResizeGui() && mc.currentScreen != null) ? 1 : 0);
+		int cursorPosUniform = GL20.glGetUniformLocation(shaderProgram, "cursorPos");
+		Window window = mc.getWindow();
+		float mouseX = (float)mc.mouse.getX() / (float)window.getWidth();
+		float mouseY = (float)mc.mouse.getY() / (float)window.getHeight();
+		mouseX = (mouseX - 0.5f) * window.getWidth() / (float)window.getHeight() + 0.5f;
+		mouseX = Math.max(0, Math.min(1, mouseX));
+		GL20.glUniform2f(cursorPosUniform, mouseX, 1-mouseY);
 	}
 	
 	public void runShader(float tickDelta) {
@@ -292,6 +327,10 @@ public abstract class Projection {
 		} else {
 			return null;
 		}
+	}
+	
+	public boolean getResizeGui() {
+		return resizeGui && MinecraftClient.getInstance().world != null;
 	}
 	
 	public boolean shouldRotateParticles() {
