@@ -32,13 +32,15 @@ public abstract class Projection {
 	public static int antialiasing = 16;
 	public static boolean skyBackground = true;
 	public static float zoom = 0;
+	public static boolean resizeGui;
 	
 	protected int renderPass;
 	
 	private static boolean hudHidden;
-	public static boolean resizeGui;
-	
 	private static float tickDelta;
+	
+	private static int screenWidth;
+	private static int screenHeight;
 	
 	public static Projection getProjection() {
 		if (currentProjection == null) {
@@ -62,11 +64,27 @@ public abstract class Projection {
 	public abstract String getFragmentShader();
 	
 	public void renderWorld(float tickDelta, long startTime, boolean tick) {
-		Projection.tickDelta = tickDelta;
 		MinecraftClient mc = MinecraftClient.getInstance();
+		Projection.tickDelta = tickDelta;
 		int displayWidth = mc.getWindow().getWidth();
 		int displayHeight = mc.getWindow().getHeight();
 		hudHidden = mc.options.hudHidden;
+		
+		if (BufferManager.getFramebuffer() == null) {
+			BufferManager.createFramebuffer();
+			shader.createShaderProgram(getProjection());
+			screenWidth = displayWidth;
+			screenHeight = displayHeight;
+		}
+		
+		if (screenWidth != displayWidth || screenHeight != displayHeight) {
+			shader.deleteShaderProgram();
+			BufferManager.deleteFramebuffer();
+			BufferManager.createFramebuffer();
+			shader.createShaderProgram(getProjection());
+			screenWidth = displayWidth;
+			screenHeight = displayHeight;
+		}
 		
 		if (Math.max(getFovX(), getFovY()) > 90 || zoom < 0) {
 			for (renderPass = 1; renderPass < 5; renderPass++) {
@@ -142,11 +160,6 @@ public abstract class Projection {
 		
 		Framebuffer defaultFramebuffer = MinecraftClient.getInstance().getFramebuffer();
 		Framebuffer targetFramebuffer = BufferManager.getFramebuffer();
-		if (targetFramebuffer == null) { //FIXME
-			BufferManager.createFramebuffer();
-			targetFramebuffer = BufferManager.getFramebuffer();
-			shader.createShaderProgram(getProjection());
-		}
 		
 		GlStateManager.bindFramebuffer(FramebufferInfo.FRAME_BUFFER, targetFramebuffer.fbo);
 		GL11.glViewport(0, 0, targetFramebuffer.textureWidth, targetFramebuffer.textureHeight);
