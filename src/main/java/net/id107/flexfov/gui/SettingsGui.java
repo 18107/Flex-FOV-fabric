@@ -2,6 +2,7 @@ package net.id107.flexfov.gui;
 
 import net.id107.flexfov.ConfigManager;
 import net.id107.flexfov.gui.advanced.AdvancedGui;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -72,7 +73,7 @@ public abstract class SettingsGui extends Screen {
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderBackground(matrices);
-		this.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
+		DrawableHelper.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 }

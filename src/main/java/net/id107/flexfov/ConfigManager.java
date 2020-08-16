@@ -15,7 +15,7 @@ import net.id107.flexfov.projection.Projection;
 
 public class ConfigManager {
 
-	private static final Path filePath = Paths.get(FabricLoader.getInstance().getConfigDirectory().getPath() + "/FlexFOVconfig.bin");
+	private static final Path filePath = Paths.get(FabricLoader.getInstance().getConfigDir() + "/FlexFOVconfig.bin");
 	
 	public static void loadConfig() {
 		if (Files.exists(filePath)) {
