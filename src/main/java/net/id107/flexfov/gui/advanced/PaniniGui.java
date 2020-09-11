@@ -21,7 +21,7 @@ public class PaniniGui extends AdvancedGui {
 		DoubleOption FOV = new DoubleOption("paniniFov", 0, 360, 1,
 				(gameOptions) -> {return Projection.getProjection().getFovX();},
 				(gameOptions, number) -> {Projection.fov = number; ConfigManager.saveConfig();},
-				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + Projection.getProjection().getFovX());});
+				(gameOptions, doubleOption) -> {return new LiteralText("FOV: " + (int)Projection.getProjection().getFovX());});
 		addButton(FOV.createButton(client.options, width / 2 - 180, height / 6 + 60, 360));
 	}
 }
