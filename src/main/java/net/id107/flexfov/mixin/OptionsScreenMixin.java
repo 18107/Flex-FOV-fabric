@@ -21,7 +21,7 @@ public abstract class OptionsScreenMixin extends Screen {
 	
 	@Inject(method = "init()V", at = @At(value = "TAIL"))
 	private void newButton(CallbackInfo callbackInfo) {
-		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 15, 150, 20, new LiteralText("Flex FOV settings"), (buttonWidget) -> {
+		addButton(new ButtonWidget(width / 2 - 155, height / 6 + 15, 150, 20, new LiteralText("Flex FOV Settings"), (buttonWidget) -> {
 			client.openScreen(SettingsGui.getGui(this));
 		}));
 	}
